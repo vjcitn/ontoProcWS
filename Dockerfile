@@ -1,0 +1,20 @@
+FROM bioconductor/bioconductor_docker:RELEASE_3_19
+
+WORKDIR /home/rstudio
+
+COPY --chown=rstudio:rstudio . /home/rstudio/
+
+# setup
+
+USER rstudio
+RUN Rscript -e "BiocManager::install(ask=FALSE)"
+RUN Rscript -e "BiocManager::install(c('reticulate', 'devtools', 'remotes', 'BiocStyle', 'magick'), ask=FALSE)"
+ENV RETICULATE_PYTHON=/usr/bin/python3
+RUN Rscript -e "BiocManager::install(c('vjcitn/ontoProc'))"
+RUN Rscript -e "reticulate::py_config()"
+RUN /usr/bin/pip3 install owlready2
+#
+## now build for the workshop
+RUN Rscript -e "devtools::install('.', dependencies=FALSE, build_vignettes=FALSE, repos = BiocManager::repositories())"
+RUN Rscript -e "library(ontoProc); example('plot.owlents')" # ensure cache started
+USER root
