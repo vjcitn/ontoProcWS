@@ -34,7 +34,4 @@ Config/reticulate/autoconfigure:
     )
   )
 SystemRequirements: owlready2
-URL: https://github.com/vjcitn/ontoProcWS
-BugReports: https://github.com/vjcitn/ontoProcWS/issues
 DockerImage: ghcr.io/vjcitn/ontoprocws:0.0.1
-
