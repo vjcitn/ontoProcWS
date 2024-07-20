@@ -1,10 +1,10 @@
 ---
-title: "owlents: using OWL directly in ontoProc"
+title: "Ontology concepts and tools in Bioconductor for Bioc2024"
 author: "Vincent J. Carey, stvjc at channing.harvard.edu"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{owlents: using OWL directly in ontoProc}
+  %\VignetteIndexEntry{Ontology concepts and tools in Bioconductor for Bioc2024}
   %\VignetteEncoding{UTF-8}
 bibliography: ontobib.bib
 output:
@@ -15,11 +15,91 @@ output:
     toc: yes
 ---
 
+# Objectives
+
+- introduction to ontology-related computations in R with the ORDO rare disease ontology and CL cell ontology
+
+- review of general ontology resources and the OWL RDF/XML serialization
+
+- retrieving, updating, searching for OWL representations of ontologies using `BiocFileCache` and `owl2cache`
+
+- Ontology mapping of phenotypes of the GWAS catalog using
+Experimental Feature Ontology
+
 # Introduction
 
-In Bioconductor 3.19, ontoProc can work with OWL RDF/XML
-serializations of ontologies, via the 
-[owlready2](https://owlready2.readthedocs.io/en/v0.42/) python modules.
+## ORDO for rare diseases
+
+Our first example uses the ORDO ontology, which is distributed
+in compressed OWL format
+with the ontoProc package.
+
+Here are the first 18 lines of the OWL XML:
+```{r lk1, message=FALSE}
+library(ontoProc)
+pa = get_ordo_owl_path()
+readLines(pa, 18)
+```
+This establishes a variety of namespaces and other
+metadata for annotations
+that will be used throughout the ontology.  Of particular
+interest is the version string towards the end.  As of
+3 July 2024, version 4.5 has been published.  We
+are working with version 4.2.
+
+ontoProc uses an interface (via the reticulate package)
+to the 
+[owlready2](https://owlready2.readthedocs.io/en/v0.42/) python modules
+distributed via pypi.
+
+Ingestion is typically fast and returns an instance of 
+the S3 class `owlents`.
+```{r doop}
+orde = setup_entities(pa)
+orde
+```
+
+The most common conceptual relationship encoded in the
+ontologies to be considered is "is-a".  Given any
+term in the ontology, its ancestors are terms
+that are successively more general.
+
+Let's look at two terms.  Given an owlents instance
+`x` and a numeric vector `n`, `x[n]` 'subsets' the
+information to the selected terms.
+```{r lkanc}
+orde[1000:1001]
+ancestors(orde[1000:1001])
+labels(orde[1000:1001])
+```
+Here we are seeing a mix of R and python references.
+As this package matures, this mixing should diminish.
+
+We can use character tags to subset owlents
+instances as well.  This is how we "decode" two
+of the ancestors of `orde[1000]`.
+
+```{r deco1}
+labels(orde[c("Orphanet_377788", "Orphanet_557493")])
+```
+
+A new feature of ontoProc's OWL processing is the
+availability of searching labels with regular expression
+matching.  This feature is built in to owlready2.
+
+```{r lksrch}
+lsrch = search_labels(orde, "*lipodystrophy*")
+length(lsrch)
+```
+To visualize relationships among the terms,
+a plot method leverages the ontologyIndex
+packages from CRAN.
+
+```{r lkpl}
+plot(orde, names(lsrch)[15:25])
+```
+
+## Cell ontology
 
 The `owl2cache` function retrieves OWL from a URL or file
 and places it in a cache to avoid repetitious retrievals.  The
@@ -47,14 +127,13 @@ sel = c("CL_0000492", "CL_0001054", "CL_0000236",
 plot(cle, sel)
 ```
 
-# Illustration with Human Phenotype ontology
+## Illustrations with Human Phenotype ontology
 
 We'll obtain and ad hoc selection of
 15 UBERON term names and visualize
 the hierarchy.
 
 ```{r gethp}
-ontoProc:::install_owlready2()
 hpont_path = owl2cache(url="http://purl.obolibrary.org/obo/hp.owl")
 hpents = setup_entities(hpont_path)
 kp = grep("UBER", hpents$clnames, value=TRUE)[21:35]
@@ -70,3 +149,48 @@ t(t(table(sapply(strsplit(hpents$clnames, "_"), "[", 1))))
 To characterize human phenotypes ontologically, 
 CL, GO, CHEBI, and
 UBERON play significant roles.
+
+# Caching
+
+We described `owl2cache` above.  By default, BiocFileCache's cache
+is used.  Query it for all available OWL files.
+
+```{r lkbcc}
+library(BiocFileCache)
+ca = BiocFileCache()
+bfcquery(ca, "owl")
+```
+
+At present there is no attempt to identify ontology version.
+This enhancement may be introduced in a future revision of ontoProc.
+
+Once we have the path, `setup_entities` will deserialize the content to the
+`owlents` class.
+
+# Ontology of GWAS outcomes in the GWAS catalog
+
+In this section we examine a package that is under development,
+[gwasCatSearch](https://github.com/ccb-hms/gwasCatSearch).  This uses
+ideas from the [semantic sql project](https://github.com/INCATools/semantic-sql)
+to improve performance of the most common operations on ontologies.
+
+We'll use the search app at [shinyapps.io](https://vjcitn.shinyapps.io/gwasCatSearch)
+to explore connections between the GWAS catalog and the Experimental Factor
+Ontology used to annotate GWAS outcomes.  Intermediate components are
+corpustools for enhancing discovery in natural language formulations of
+phenotypes, and SQLite, with tables representing ontology terms and
+their ancestors and descendants.
+
+This segment gives some sense of how outcomes can be sorted
+according to the frequency of recorded hits in the catalog,
+and the associated EFO terms decoded.
+```{r lksem}
+library(gwasCatSearch)
+library(RSQLite)
+library(dplyr)
+con = gwasCatSearch_dbconn()
+dbListTables(con)
+tbl(con, "gwascatalog_associations") |> select(MAPPED_TRAIT_URI) |> 
+    group_by(MAPPED_TRAIT_URI) |> summarise(n=n()) |> arrange(desc(n))
+tbl(con, "efo_labels") |> filter(Subject %in% c("EFO:0004340", "EFO:0004612"))
+```
