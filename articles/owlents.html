@@ -79,7 +79,7 @@ Bioc2024</h1>
                         <h4 data-toc-skip class="author">Vincent J.
 Carey, stvjc at channing.harvard.edu</h4>
             
-            <h4 data-toc-skip class="date">July 20, 2024</h4>
+            <h4 data-toc-skip class="date">July 21, 2024</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/vjcitn/ontoProcWS/blob/main/vignettes/owlents.Rmd" class="external-link"><code>vignettes/owlents.Rmd</code></a></small>
       <div class="hidden name"><code>owlents.Rmd</code></div>
@@ -158,10 +158,10 @@ information to the selected terms.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ontoProc/man/ancestors.html" class="external-link">ancestors</a></span><span class="op">(</span><span class="va">orde</span><span class="op">[</span><span class="fl">1000</span><span class="op">:</span><span class="fl">1001</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $Orphanet_79083</span></span>
-<span><span class="co">## {ORDO.Orphanet_377788, owl.Thing, ORDO.Orphanet_79083, ORDO.Orphanet_557493, ORDO.Orphanet_C001}</span></span>
+<span><span class="co">## {ORDO.Orphanet_79083, ORDO.Orphanet_377788, ORDO.Orphanet_557493, ORDO.Orphanet_C001, owl.Thing}</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $Orphanet_146</span></span>
-<span><span class="co">## {ORDO.Orphanet_377788, owl.Thing, ORDO.Orphanet_146, ORDO.Orphanet_557493, ORDO.Orphanet_C001}</span></span></code></pre>
+<span><span class="co">## {ORDO.Orphanet_377788, ORDO.Orphanet_557493, ORDO.Orphanet_C001, owl.Thing, ORDO.Orphanet_146}</span></span></code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/labels.html" class="external-link">labels</a></span><span class="op">(</span><span class="va">orde</span><span class="op">[</span><span class="fl">1000</span><span class="op">:</span><span class="fl">1001</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                 Orphanet_79083 </span></span>
@@ -263,8 +263,8 @@ BiocFileCache’s cache is used. Query it for all available OWL files.</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 2 × 10</span></span></span>
 <span><span class="co">##   rid   rname create_time access_time rpath rtype fpath last_modified_time etag </span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> BFC1  cl.o… 2024-07-20… 2024-07-20… /git… web   http… 2024-07-10 14:23:… 0x8D…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> BFC2  hp.o… 2024-07-20… 2024-07-20… /git… web   http… 2024-07-01 14:29:… 0x8D…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> BFC1  cl.o… 2024-07-21… 2024-07-21… /git… web   http… 2024-07-10 14:23:… 0x8D…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> BFC2  hp.o… 2024-07-21… 2024-07-21… /git… web   http… 2024-07-01 14:29:… 0x8D…</span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: expires &lt;dbl&gt;</span></span></span></code></pre>
 <p>At present there is no attempt to identify ontology version. This
 enhancement may be introduced in a future revision of ontoProc.</p>
@@ -318,7 +318,7 @@ terms decoded.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"gwascatalog_associations"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">MAPPED_TRAIT_URI</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">MAPPED_TRAIT_URI</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n<span class="op">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># Source:     SQL [?? x 2]</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># Database:   sqlite 3.46.0 [/tmp/RtmpbLGfjM/gwascatalog_search.db]</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># Database:   sqlite 3.46.0 [/tmp/Rtmp1wcniL/gwascatalog_search.db]</span></span></span>
 <span><span class="co">## <span style="color: #949494;"># Ordered by: desc(n)</span></span></span>
 <span><span class="co">##    MAPPED_TRAIT_URI                         n</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
@@ -336,7 +336,7 @@ terms decoded.</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"efo_labels"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Subject</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"EFO:0004340"</span>, <span class="st">"EFO:0004612"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># Source:   SQL [2 x 6]</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># Database: sqlite 3.46.0 [/tmp/RtmpbLGfjM/gwascatalog_search.db]</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># Database: sqlite 3.46.0 [/tmp/Rtmp1wcniL/gwascatalog_search.db]</span></span></span>
 <span><span class="co">##   Subject     Object                      IRI   DiseaseLocation Direct Inherited</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">1</span> EFO:0004340 body mass index             http… <span style="color: #BB0000;">NA</span>                 307        31</span></span>
