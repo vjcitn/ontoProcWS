@@ -9,7 +9,7 @@ COPY --chown=rstudio:rstudio . /home/rstudio/
 USER rstudio
 RUN Rscript -e "BiocManager::install(ask=FALSE)"
 RUN Rscript -e "BiocManager::install(c('reticulate', 'devtools', 'remotes', 'BiocStyle', 'magick'), ask=FALSE)"
-RUN Rscript -e "BiocManager::install("ccb-hms/gwasCatSearch")
+RUN Rscript -e "BiocManager::install('ccb-hms/gwasCatSearch')"
 ENV RETICULATE_PYTHON=/usr/bin/python3
 RUN Rscript -e "BiocManager::install(c('vjcitn/ontoProc'))"
 RUN Rscript -e "reticulate::py_config()"
