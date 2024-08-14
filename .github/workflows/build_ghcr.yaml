@@ -1,4 +1,4 @@
-name: Build Container Image for Naive BBS
+name: Build Container Image
 on:
   workflow_dispatch:
   push:
@@ -12,6 +12,10 @@ jobs:
     name: Build container image for GHCR
     runs-on: ubuntu-latest
     steps:
+      - name: Free root space
+        uses: almahmoud/free-root-space@main
+        with:
+          verbose: true
       - uses: actions/checkout@v4
       - name: Extract metadata for container image
         id: meta
