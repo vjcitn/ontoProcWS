@@ -12,7 +12,7 @@ Description: Support harvesting of diverse bioinformatic ontologies,
 	analyze genome-scale experiments, particularly cell x compound 
         screens.  Another purpose is to strengthen development of 
 	compelling use cases for richer interfaces to emerging ontologies.
-Version: 1.0.7
+Version: 1.0.8
 Suggests: knitr, org.Hs.eg.db, org.Mm.eg.db, testthat, BiocStyle,
 	SingleCellExperiment, celldex, rmarkdown, AnnotationDbi, magick,
 	ontoProc, dplyr, RSQLite, gwasCatSearch
