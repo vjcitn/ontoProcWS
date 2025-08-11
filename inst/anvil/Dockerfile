@@ -1,4 +1,4 @@
-FROM us.gcr.io/broad-dsp-gcr-public/anvil-rstudio-bioconductor:3.19.0
+FROM us.gcr.io/broad-dsp-gcr-public/anvil-rstudio-bioconductor:3.21.0
 
 WORKDIR /home/rstudio
 

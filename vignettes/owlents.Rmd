@@ -36,6 +36,8 @@ with the ontoProc package.
 
 Here are the first 18 lines of the OWL XML:
 ```{r lk1, message=FALSE}
+library(ontoProcWS) # important for configuration process
+reticulate::py_install("owlready2", pip=TRUE)  # not always persistent...
 library(ontoProc)
 pa = get_ordo_owl_path()
 readLines(pa, 18)
