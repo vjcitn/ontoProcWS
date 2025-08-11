@@ -36,6 +36,7 @@ with the ontoProc package.
 
 Here are the first 18 lines of the OWL XML:
 ```{r lk1, message=FALSE}
+BiocManager::install(c("ontoProc", "vjcitn/ontoProcWS")) # innocuous, for use with AnVILPublish
 library(ontoProcWS) # important for configuration process
 reticulate::py_install("owlready2", pip=TRUE)  # not always persistent...
 library(ontoProc)
