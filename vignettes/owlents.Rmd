@@ -7,6 +7,7 @@ vignette: >
   %\VignetteIndexEntry{Ontology concepts and tools in Bioconductor for Bioc2024}
   %\VignetteEncoding{UTF-8}
 bibliography: ontobib.bib
+jupyter: ir
 output:
   BiocStyle::html_document:
     highlight: pygments
@@ -36,9 +37,9 @@ with the ontoProc package.
 
 Here are the first 18 lines of the OWL XML:
 ```{r lk1, message=FALSE}
-BiocManager::install(c("ontoProc", "vjcitn/ontoProcWS")) # innocuous, for use with AnVILPublish
+BiocManager::install(c("reticulate", "ontoProc", "vjcitn/ontoProcWS",
+  "vjcitn/gwasCatSearch"), ask=FALSE, update=FALSE) # innocuous, for use with AnVILPublish
 library(ontoProcWS) # important for configuration process
-reticulate::py_install("owlready2", pip=TRUE)  # not always persistent...
 library(ontoProc)
 pa = get_ordo_owl_path()
 readLines(pa, 18)
@@ -58,6 +59,8 @@ distributed via pypi.
 Ingestion is typically fast and returns an instance of 
 the S3 class `owlents`.
 ```{r doop}
+library(reticulate)
+py_require("owlready2")  # not always persistent...
 orde = setup_entities(pa)
 orde
 ```
@@ -116,10 +119,11 @@ library(ontoProc)
 clont_path = owl2cache(url="http://purl.obolibrary.org/obo/cl.owl")
 # need to fix!
 tmp = readLines(clont_path)
-bad = grep("STATO_0000416", tmp)[1:2]  # see https://github.com/obophenotype/cell-ontology/issues/3237
-tmp = tmp[-bad]
-bad = grep("STATO_0000663", tmp)[1:2]  # see https://github.com/obophenotype/cell-ontology/issues/3237
-tmp = tmp[-bad]
+bad = grep("STATO_0000416", tmp)  # see https://github.com/obophenotype/cell-ontology/issues/3237
+# 1:2 because need to kill comment and then use
+if (length(bad)>0) tmp = tmp[-bad[1:2]]
+bad = grep("STATO_0000663", tmp)  # see https://github.com/obophenotype/cell-ontology/issues/3237
+if (length(bad)>0) tmp = tmp[-bad[1:2]]
 tf = tempfile()
 writeLines(tmp, tf)
 cle = setup_entities(tf)
